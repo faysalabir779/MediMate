@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MediMate</string>
+    <string name="pending_text">Order New Item....</string>
+    <string name="approved_text">Wait for your orders to be approved....</string>
+    <string name="declined_text">Happy to see you have no order declined....</string>
+    <string name="approve_success_text">Your account has been approved. \nYou are now being redirected to the home page.</string>
+    <string name="blocked_success_text">Feeling Sorry, to inform you that your account has been blocked</string>
+    <string name="waiting_approval">Your account is currently under review. \nWe appreciate your patience and will notify you once the review process is complete.</string>
+</resources>
