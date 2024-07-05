@@ -55,7 +55,7 @@ fun SignUpCompleteMsg(note: String = "") {
             )
         } else {
             Spacer(modifier = Modifier.height(10.dp))
-            CircularProgressIndicator()
+            CircularProgressIndicator( )
         }
 
     }

@@ -41,12 +41,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.medimate.AllViewModel
+import com.example.medimate.R
 
 
 @Composable
@@ -75,6 +77,8 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
     var category by remember { mutableStateOf("") }
     var status by remember { mutableStateOf(0) }
 
+    var quantityExceeds by remember { mutableStateOf(false) }
+
 
     Column(modifier = Modifier.fillMaxSize()) {
 
@@ -83,12 +87,7 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
                 .fillMaxWidth()
                 .height(140.dp)
                 .background(
-                    brush = Brush.verticalGradient(
-                        listOf(
-                            Color(0xFF111111),
-                            Color(0xFF2E2E2E)
-                        )
-                    ), shape = RoundedCornerShape(10.dp)
+                    color = Color(0xFF111111), shape = RoundedCornerShape(10.dp)
                 )
         ) {
             Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
@@ -229,25 +228,45 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
             0.0 // Or any default value you want when quantity is empty
         }
 
+        if (quantityExceeds){
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(
+                text = stringResource(id = R.string.quantity_exceeds),
+                fontSize = 14.sp,
+                color = Color(0xFFFF0808),
+                modifier = Modifier.padding(horizontal = 3.dp)
+            )
+
+        }
+
         Spacer(modifier = Modifier.height(30.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Single Price")
-            Text(text = "$$productPrice")
+            Text(text = if (!quantityExceeds) {
+                "$$productPrice"
+            } else {
+                "$ 0.0"
+            })
         }
 
         Spacer(modifier = Modifier.height(3.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Total Price", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-            Text(text = "$$totalAmount", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Text(text = if (!quantityExceeds) {
+                "$$productPrice"
+            } else {
+                "$ 0.0"
+            }, fontWeight = FontWeight.Bold, fontSize = 20.sp)
         }
 
         Spacer(modifier = Modifier.height(20.dp))
         Button(
-            onClick = { 
+            onClick = {
                 if (productName==""){
                     Toast.makeText(applicationContext, "Please Select a Product", Toast.LENGTH_SHORT).show()
                 }
-                else if (productquantity==""){
+                else if (productquantity.toInt() >= stock){
+                    quantityExceeds = true
                     Toast.makeText(applicationContext, "Type a Quantity", Toast.LENGTH_SHORT).show()
                 }
                 else{
@@ -267,12 +286,7 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    brush = Brush.verticalGradient(
-                        listOf(
-                            Color(0xFF111111),
-                            Color(0xFF2E2E2E)
-                        )
-                    ),
+                    color = Color(0xFF111111),
                     shape = RoundedCornerShape(50.dp)
                 )
                 .heightIn(min = 50.dp),
