@@ -61,7 +61,7 @@ fun Dashboard(
 ) {
     val savedData by allViewModel.preferenceData.collectAsState()
 
-    var availableProducts = allViewModel.availableProducts.value
+    var availableProducts = allViewModel.availableProducts.value.filter { it.user_id == savedData.userId }
 
     LaunchedEffect(key1 = true) {
         allViewModel.fetchAvailableProducts()
@@ -70,6 +70,7 @@ fun Dashboard(
     var dropDown by remember {
         mutableStateOf(false)
     }
+    var quantityExceeds by remember { mutableStateOf(false) }
 
     var productName by remember { mutableStateOf("") }
     var productPrice by remember { mutableStateOf(0.0) }
@@ -264,7 +265,13 @@ fun Dashboard(
 
         OutlinedTextField(
             value = productquantity,
-            onValueChange = { productquantity = it },
+            onValueChange = { productquantity = it
+                quantityExceeds = productquantity.toIntOrNull() ?: 0 >= stock
+                totalAmount = if (productquantity.isNotEmpty() && !quantityExceeds) {
+                    productPrice * productquantity.toDouble()
+                } else {
+                    0.0
+                }},
             modifier = Modifier
                 .fillMaxWidth(),
             placeholder = {
@@ -283,25 +290,40 @@ fun Dashboard(
         } else {
             0.0 // Or any default value you want when quantity is empty
         }
-        Spacer(modifier = Modifier.height(5.dp))
+        if (quantityExceeds) {
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(
+                text = stringResource(id = R.string.quantity_exceeds),
+                fontSize = 14.sp,
+                color = Color(0xFFFF0808),
+                modifier = Modifier.padding(horizontal = 3.dp)
+            )
 
-        Text(
-            text = stringResource(id = R.string.quantity_exceeds),
-            fontSize = 14.sp,
-            color = Color(0xFFFF0808),
-            modifier = Modifier.padding(horizontal = 3.dp)
-        )
+        }
+
         Spacer(modifier = Modifier.height(30.dp))
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Single Price")
-            Text(text = "$$productPrice")
+            Text(
+                text = if (!quantityExceeds) {
+                    "$$productPrice"
+                } else {
+                    "$ 0.0"
+                }
+            )
         }
 
         Spacer(modifier = Modifier.height(3.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Total Price", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-            Text(text = "$$totalAmount", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Text(
+                text = if (!quantityExceeds) {
+                    "$$totalAmount"
+                } else {
+                    "$ 0.0"
+                }, fontWeight = FontWeight.Bold, fontSize = 20.sp
+            )
         }
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -313,8 +335,13 @@ fun Dashboard(
                         "Please Select a Product",
                         Toast.LENGTH_SHORT
                     ).show()
-                } else if (productquantity == "") {
-                    Toast.makeText(applicationContext, "Type a Quantity", Toast.LENGTH_SHORT).show()
+                } else if (productquantity.isEmpty()) {
+                    Toast.makeText(applicationContext, "Quantity is empty", Toast.LENGTH_SHORT)
+                        .show()
+                } else if (quantityExceeds) {
+                    quantityExceeds = true
+                    Toast.makeText(applicationContext, "Quantity Exceeds", Toast.LENGTH_SHORT)
+                        .show()
                 } else {
 //                    allViewModel.addOrder(
 //                        applicationContext,
