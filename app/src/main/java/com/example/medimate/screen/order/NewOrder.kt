@@ -39,7 +39,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -103,10 +102,13 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
                 Divider(modifier = Modifier.padding(horizontal = 16.dp))
                 Spacer(modifier = Modifier.height(17.dp))
 
-                Row (modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp), horizontalArrangement = Arrangement.SpaceBetween){
-                    Column (modifier = Modifier.weight(1f)){
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "Category: $productCategory",
                             color = Color.White,
@@ -126,10 +128,12 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
                         color = Color.White
                     )
 
-                    Column (modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                        horizontalAlignment = Alignment.End){
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.End
+                    ) {
                         Text(text = "Price: $productPrice", color = Color.White, fontSize = 14.sp)
                         Row {
                             Text(text = "Certified: ", color = Color.White, fontSize = 14.sp)
@@ -208,7 +212,15 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
 
         OutlinedTextField(
             value = productquantity,
-            onValueChange = { productquantity = it },
+            onValueChange = {
+                productquantity = it
+                quantityExceeds = productquantity.toIntOrNull() ?: 0 >= stock
+                totalAmount = if (productquantity.isNotEmpty() && !quantityExceeds) {
+                    productPrice * productquantity.toDouble()
+                } else {
+                    0.0
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth(),
             placeholder = {
@@ -222,13 +234,7 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
             )
         )
 
-        totalAmount = if (productquantity.isNotEmpty()) {
-            productPrice * productquantity.toDouble()
-        } else {
-            0.0 // Or any default value you want when quantity is empty
-        }
-
-        if (quantityExceeds){
+        if (quantityExceeds) {
             Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = stringResource(id = R.string.quantity_exceeds),
@@ -242,35 +248,58 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
         Spacer(modifier = Modifier.height(30.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Single Price")
-            Text(text = if (!quantityExceeds) {
-                "$$productPrice"
-            } else {
-                "$ 0.0"
-            })
+            Text(
+                text = if (!quantityExceeds) {
+                    "$$productPrice"
+                } else {
+                    "$ 0.0"
+                }
+            )
         }
 
         Spacer(modifier = Modifier.height(3.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Total Price", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-            Text(text = if (!quantityExceeds) {
-                "$$productPrice"
-            } else {
-                "$ 0.0"
-            }, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Text(
+                text = if (!quantityExceeds) {
+                    "$$totalAmount"
+                } else {
+                    "$ 0.0"
+                }, fontWeight = FontWeight.Bold, fontSize = 20.sp
+            )
         }
 
         Spacer(modifier = Modifier.height(20.dp))
         Button(
             onClick = {
-                if (productName==""){
-                    Toast.makeText(applicationContext, "Please Select a Product", Toast.LENGTH_SHORT).show()
-                }
-                else if (productquantity.toInt() >= stock){
+                if (productName == "") {
+                    Toast.makeText(
+                        applicationContext,
+                        "Please Select a Product",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else if (productquantity.isEmpty()) {
+                    Toast.makeText(applicationContext, "Quantity is empty", Toast.LENGTH_SHORT)
+                        .show()
+                } else if (quantityExceeds) {
                     quantityExceeds = true
-                    Toast.makeText(applicationContext, "Type a Quantity", Toast.LENGTH_SHORT).show()
-                }
-                else{
-                    allViewModel.addOrder(applicationContext, productId, savedData.name, savedData.userId, savedData.address, savedData.phone, productName, category, totalAmount.toString(), productquantity, status)
+                    Toast.makeText(applicationContext, "Quantity Exceeds", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    allViewModel.addOrder(
+                        applicationContext,
+                        productId,
+                        savedData.name,
+                        savedData.userId,
+                        savedData.address,
+                        savedData.phone,
+                        productName,
+                        category,
+                        totalAmount.toString(),
+                        productquantity,
+                        status,
+                        productPrice.toString()
+                    )
                     productName = ""
                     productPrice = 0.0
                     productquantity = ""

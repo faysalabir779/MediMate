@@ -82,12 +82,7 @@ fun DeclinedOrder(item: GetAllOrderDetailsItem, allViewModel: AllViewModel) {
             .fillMaxWidth()
             .height(140.dp)
             .background(
-                brush = Brush.verticalGradient(
-                    listOf(
-                        Color(0xFF111111),
-                        Color(0xFF2E2E2E)
-                    )
-                ), shape = RoundedCornerShape(10.dp)
+                color = Color(0xFF111111), shape = RoundedCornerShape(10.dp)
             )
     ) {
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {

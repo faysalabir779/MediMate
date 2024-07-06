@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.medimate.API.response.AllProductItem
+import com.example.medimate.API.response.GetAllAvailableProductsItem
 import com.example.medimate.API.response.GetAllOrderDetailsItem
 import com.example.medimate.API.response.GetSpecificUserItem
 import com.example.medimate.pref.PreferenceKeys
@@ -21,21 +22,24 @@ import com.example.medimate.pref.UserData
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore("User_Id")
 
 class AllViewModel(context: Context) : ViewModel() {
+
+    private val _addedApprovedOrders = mutableStateOf(mutableSetOf<String>())
+    val addedApprovedOrders: Set<String> get() = _addedApprovedOrders.value
 
     var state = mutableStateOf("")
 
     var data = mutableStateOf<List<AllProductItem>>(emptyList())
     var specificUser = mutableStateOf<List<GetSpecificUserItem>>(emptyList())
     var allOrder = mutableStateOf<List<GetAllOrderDetailsItem>>(emptyList())
+
+    var availableProducts = mutableStateOf<List<GetAllAvailableProductsItem>>(emptyList())
 
     private val dataStore = context.dataStore
 
@@ -64,10 +68,11 @@ class AllViewModel(context: Context) : ViewModel() {
     init {
         state.value = State.DEFAULT.name
         viewModelScope.launch {
-            preferenceData.collect{
+            preferenceData.collect {
                 Log.d("idkoi", "joafj: ${it.userId}")
                 getSpecificUser(it.userId)
             }
+
         }
     }
 
@@ -128,7 +133,7 @@ class AllViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun getSpecificUser(userId: String){
+    fun getSpecificUser(userId: String) {
         viewModelScope.launch {
             val resultForSpecificUser =
                 RetrofitInstance.api.getSpecificUser(userId)
@@ -164,7 +169,8 @@ class AllViewModel(context: Context) : ViewModel() {
         category: String,
         totalAmount: String,
         productquantity: String,
-        status: Int
+        status: Int,
+        price: String
     ) {
         viewModelScope.launch {
             var result = RetrofitInstance.api.addOrder(
@@ -177,7 +183,8 @@ class AllViewModel(context: Context) : ViewModel() {
                 category,
                 totalAmount,
                 productquantity,
-                status
+                status,
+                price
             )
             if (result.isSuccessful) {
                 if (result.body()?.status == 200) {
@@ -202,6 +209,36 @@ class AllViewModel(context: Context) : ViewModel() {
             if (result.isSuccessful) {
                 val dataBody = result.body()!!
                 allOrder.value = dataBody ?: emptyList()
+            }
+        }
+    }
+
+    fun addApprovedOrderToAvailableProducts(
+        order: GetAllOrderDetailsItem
+    ) {
+        if (_addedApprovedOrders.value.add(order.product_id)){
+            viewModelScope.launch {
+                val result = RetrofitInstance.api.availableProducts(
+                    order.user_id,
+                    order.product_id,
+                    order.product_price.toString(),
+                    order.product_name,
+                    order.category,
+                    order.quantity.toString()
+                )
+                if (result.isSuccessful) {
+                    fetchAvailableProducts()
+                }
+            }
+        }
+    }
+
+    fun fetchAvailableProducts() {
+        viewModelScope.launch {
+            val result = RetrofitInstance.api.getAvailableProducts()
+            if (result.isSuccessful) {
+                val dataBody = result.body()!!
+                availableProducts.value = dataBody ?: emptyList()
             }
         }
     }

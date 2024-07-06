@@ -8,6 +8,7 @@ data class GetAllOrderDetailsItem(
     val phone: String,
     val product_id: String,
     val product_name: String,
+    val product_price: Double,
     val quantity: Int,
     val status: Int,
     val total_amount: Double,

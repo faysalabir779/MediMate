@@ -1,5 +1,8 @@
 package com.example.medimate.screen.DashBoard
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,6 +35,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,23 +49,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.medimate.AllViewModel
 import com.example.medimate.R
 
-@Preview(showBackground = true)
 @Composable
 fun Dashboard(
+    allViewModel: AllViewModel,
+    applicationContext: Context
 ) {
-//    val savedData by allViewModel.preferenceData.collectAsState()
+    val savedData by allViewModel.preferenceData.collectAsState()
 
-//    var data = allViewModel.data.value
+    var availableProducts = allViewModel.availableProducts.value
 
     LaunchedEffect(key1 = true) {
-//        allViewModel.getALlProduct()
+        allViewModel.fetchAvailableProducts()
     }
-    var data = listOf("Napa", "Paracetamol", "Ibuprofen")
 
     var dropDown by remember {
         mutableStateOf(false)
@@ -69,15 +73,12 @@ fun Dashboard(
 
     var productName by remember { mutableStateOf("") }
     var productPrice by remember { mutableStateOf(0.0) }
+    var productId by remember { mutableStateOf("0.0") }
     var productquantity by remember { mutableStateOf("") }
     var totalAmount by remember { mutableStateOf(0.0) }
-    var productId by remember { mutableStateOf("") }
     var productCategory by remember { mutableStateOf("") }
     var certified by remember { mutableStateOf(0) }
     var stock by remember { mutableStateOf(0) }
-    var category by remember { mutableStateOf("") }
-    var status by remember { mutableStateOf(0) }
-
 
     Column(
         modifier = Modifier
@@ -86,7 +87,7 @@ fun Dashboard(
             .verticalScroll(rememberScrollState())
     ) {
 
-        Text(text = "My Inventory", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
+        Text(text = "Dashboard", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
         Spacer(modifier = Modifier.height(18.dp))
 
         Row {
@@ -175,7 +176,7 @@ fun Dashboard(
 
                     Divider(
                         modifier = Modifier
-                            .height(40.dp) // Adjust height asneeded
+                            .height(40.dp)
                             .width(1.dp),
                         color = Color.White
                     )
@@ -239,20 +240,19 @@ fun Dashboard(
                     dropDown = false
                 },
             ) {
-                data.forEach {
+                availableProducts.forEach {
                     DropdownMenuItem(
                         text = {
-                            Text(text = data.toString())
+                            Text(text = it.product_name)
                         },
                         onClick = {
-//                            productName = it!!.name
-//                            productPrice = it.price
-//                            productId = it.id.toString()
-//                            productCategory = it.category
-//                            stock = it.stack
-//                            certified = it.certified
-//                            category = it.category
-//                            dropDown = false
+                            productName = it!!.product_name
+                            productPrice = it.price
+                            productCategory = it.category
+                            productId = it.product_id
+                            stock = it.stock
+                            productCategory = it.category
+                            dropDown = false
                         })
                 }
 
@@ -307,24 +307,38 @@ fun Dashboard(
         Spacer(modifier = Modifier.height(20.dp))
         Button(
             onClick = {
-//                if (productName==""){
-//                    Toast.makeText(applicationContext, "Please Select a Product", Toast.LENGTH_SHORT).show()
-//                }
-//                else if (productquantity==""){
-//                    Toast.makeText(applicationContext, "Type a Quantity", Toast.LENGTH_SHORT).show()
-//                }
-//                else{
-//                    allViewModel.addOrder(applicationContext, productId, savedData.name, savedData.userId, savedData.address, savedData.phone, productName, category, totalAmount.toString(), productquantity, status)
-//                    productName = ""
-//                    productPrice = 0.0
-//                    productquantity = ""
-//                    totalAmount = 0.0
-//                    stock = 0
-//                    productId = ""
-//                    productCategory = ""
-//                    certified = 0
-//                    Log.d("alldata", "NewOrder: ${savedData.pinCode}")
-//                }
+                if (productName == "") {
+                    Toast.makeText(
+                        applicationContext,
+                        "Please Select a Product",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else if (productquantity == "") {
+                    Toast.makeText(applicationContext, "Type a Quantity", Toast.LENGTH_SHORT).show()
+                } else {
+//                    allViewModel.addOrder(
+//                        applicationContext,
+//                        productId,
+//                        savedData.name,
+//                        savedData.userId,
+//                        savedData.address,
+//                        savedData.phone,
+//                        productName,
+//                        category,
+//                        totalAmount.toString(),
+//                        productquantity,
+//                        status
+//                    )
+                    productName = ""
+                    productPrice = 0.0
+                    productquantity = ""
+                    totalAmount = 0.0
+                    stock = 0
+                    productId = ""
+                    productCategory = ""
+                    certified = 0
+                    Log.d("alldata", "NewOrder: ${savedData.pinCode}")
+                }
 
             },
             modifier = Modifier

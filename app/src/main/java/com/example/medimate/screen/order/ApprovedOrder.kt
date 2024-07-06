@@ -26,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -48,12 +47,20 @@ fun ApprovedOrder(allViewModel: AllViewModel, applicationContext: Context) {
 
     LaunchedEffect(key1 = true) {
         allViewModel.getAllOrderDetails()
+        allOrder.let {
+            it.forEach { order ->
+                if (order.user_id == savedData.userId && order.isApproved == "1" && order.product_id !in allViewModel.addedApprovedOrders) {
+                    allViewModel.addApprovedOrderToAvailableProducts(order)
+                }
+            }
+        }
+
     }
     Column {
         LazyColumn {
             itemsIndexed(allOrder.reversed()) { index, item ->
                 if (item.user_id == savedData.userId) {
-                    if (item.isApproved == "1"){
+                    if (item.isApproved == "1") {
                         hasApprovedOrder = true
                         ApprovedOrder(item, allViewModel)
                         Spacer(modifier = Modifier.height(10.dp))
@@ -61,7 +68,7 @@ fun ApprovedOrder(allViewModel: AllViewModel, applicationContext: Context) {
                 }
             }
         }
-        if (!hasApprovedOrder){
+        if (!hasApprovedOrder) {
             EmptyMessage(
                 orderStatus = "Approved Order",
                 painter = painterResource(id = R.drawable.emotion),
@@ -82,12 +89,7 @@ fun ApprovedOrder(item: GetAllOrderDetailsItem, allViewModel: AllViewModel) {
             .fillMaxWidth()
             .height(140.dp)
             .background(
-                brush = Brush.verticalGradient(
-                    listOf(
-                        Color(0xFF111111),
-                        Color(0xFF2E2E2E)
-                    )
-                ), shape = RoundedCornerShape(10.dp)
+                color = Color(0xFF111111), shape = RoundedCornerShape(10.dp)
             )
     ) {
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
