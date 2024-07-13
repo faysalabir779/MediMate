@@ -63,9 +63,6 @@ fun Dashboard(
 
     var availableProducts = allViewModel.availableProducts.value.filter { it.user_id == savedData.userId }
 
-    LaunchedEffect(key1 = true) {
-        allViewModel.fetchAvailableProducts()
-    }
 
     var dropDown by remember {
         mutableStateOf(false)

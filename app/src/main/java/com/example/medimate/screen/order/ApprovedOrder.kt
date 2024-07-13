@@ -45,22 +45,12 @@ fun ApprovedOrder(allViewModel: AllViewModel, applicationContext: Context) {
 
     val allOrder = allViewModel.allOrder.value
 
-    LaunchedEffect(key1 = true) {
-        allViewModel.getAllOrderDetails()
-        allOrder.let {
-            it.forEach { order ->
-                if (order.user_id == savedData.userId && order.isApproved == "1" && order.product_id !in allViewModel.addedApprovedOrders) {
-                    allViewModel.addApprovedOrderToAvailableProducts(order)
-                }
-            }
-        }
 
-    }
     Column {
         LazyColumn {
             itemsIndexed(allOrder.reversed()) { index, item ->
                 if (item.user_id == savedData.userId) {
-                    if (item.isApproved == "1") {
+                    if (item.isApproved == 1) {
                         hasApprovedOrder = true
                         ApprovedOrder(item, allViewModel)
                         Spacer(modifier = Modifier.height(10.dp))
@@ -144,7 +134,7 @@ fun ApprovedOrder(item: GetAllOrderDetailsItem, allViewModel: AllViewModel) {
                     Row {
                         Text(text = "DateOfOrder: ", color = Color.White, fontSize = 14.sp)
                         Text(
-                            text = item.date_of_craete_order,
+                            text = item.date_of_order_creation,
                             color = Color.White,
                             fontSize = 14.sp
                         )

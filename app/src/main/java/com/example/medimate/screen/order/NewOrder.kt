@@ -197,7 +197,7 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
                             productPrice = it.price
                             productId = it.id.toString()
                             productCategory = it.category
-                            stock = it.stack
+                            stock = it.stock
                             certified = it.certified
                             category = it.category
                             dropDown = false
@@ -298,7 +298,8 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
                         totalAmount.toString(),
                         productquantity,
                         status,
-                        productPrice.toString()
+                        productPrice.toString(),
+                        certified.toString()
                     )
                     productName = ""
                     productPrice = 0.0

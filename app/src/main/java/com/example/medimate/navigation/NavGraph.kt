@@ -2,6 +2,7 @@ package com.example.medimate.navigation
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,6 +30,7 @@ fun NavGraph(
 
     val savedData by allViewModel.preferenceData.collectAsState()
 
+
     var startDestination = if (savedData.userId == "") {
         Routes.SignUp
     } else {
@@ -44,13 +46,13 @@ fun NavGraph(
         composable(Routes.SignUpComplete) {
             if (specificUser.isNotEmpty()) {
                 specificUser.map {
-                    if (it.isApproved == "") {
+                    if (it.isApproved == 2) {
                         SignUpCompleteMsg(note = stringResource(id = R.string.waiting_approval))
                     }
-                    if (it.isApproved == "1") {
+                    if (it.isApproved == 1) {
                         Home(allViewModel = allViewModel, applicationContext = applicationContext)
                     }
-                    if (it.isApproved == "2") {
+                    if (it.isApproved == 0) {
                         SignUpCompleteMsg(note = stringResource(id = R.string.blocked_success_text))
                     }
                 }

@@ -30,9 +30,6 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore("User_Id")
 
 class AllViewModel(context: Context) : ViewModel() {
 
-    private val _addedApprovedOrders = mutableStateOf(mutableSetOf<String>())
-    val addedApprovedOrders: Set<String> get() = _addedApprovedOrders.value
-
     var state = mutableStateOf("")
 
     var data = mutableStateOf<List<AllProductItem>>(emptyList())
@@ -109,7 +106,7 @@ class AllViewModel(context: Context) : ViewModel() {
         state.value = State.LOADING.name
         viewModelScope.launch {
             var result =
-                RetrofitInstance.api.createUser(name, password, email, address, phone, pinCode)
+                RetrofitInstance.api.createUser(name, password, email, "123", address, phone, pinCode)
 
             if (result.isSuccessful) {
                 if (result.body()?.status == 200) {
@@ -170,21 +167,21 @@ class AllViewModel(context: Context) : ViewModel() {
         totalAmount: String,
         productquantity: String,
         status: Int,
-        price: String
+        price: String,
+        certified: String
     ) {
         viewModelScope.launch {
             var result = RetrofitInstance.api.addOrder(
                 productId,
                 userId,
-                name,
-                address,
-                phone,
                 productName,
-                category,
+                name,
                 totalAmount,
                 productquantity,
-                status,
-                price
+                "It's Urgent",
+                price,
+                certified,
+                category
             )
             if (result.isSuccessful) {
                 if (result.body()?.status == 200) {
@@ -213,35 +210,7 @@ class AllViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun addApprovedOrderToAvailableProducts(
-        order: GetAllOrderDetailsItem
-    ) {
-        if (_addedApprovedOrders.value.add(order.product_id)){
-            viewModelScope.launch {
-                val result = RetrofitInstance.api.availableProducts(
-                    order.user_id,
-                    order.product_id,
-                    order.product_price.toString(),
-                    order.product_name,
-                    order.category,
-                    order.quantity.toString()
-                )
-                if (result.isSuccessful) {
-                    fetchAvailableProducts()
-                }
-            }
-        }
-    }
 
-    fun fetchAvailableProducts() {
-        viewModelScope.launch {
-            val result = RetrofitInstance.api.getAvailableProducts()
-            if (result.isSuccessful) {
-                val dataBody = result.body()!!
-                availableProducts.value = dataBody ?: emptyList()
-            }
-        }
-    }
 }
 
 sealed class State(var name: String) {

@@ -53,7 +53,7 @@ fun DeclinedOrder(allViewModel: AllViewModel, applicationContext: Context) {
         LazyColumn {
             itemsIndexed(allOrder.reversed()) { index, item ->
                 if (item.user_id == savedData.userId) {
-                    if (item.isApproved == "2"){
+                    if (item.isApproved == 0){
                         hasDeclinedOrder = true
                         DeclinedOrder(item, allViewModel)
                         Spacer(modifier = Modifier.height(10.dp))
@@ -137,7 +137,7 @@ fun DeclinedOrder(item: GetAllOrderDetailsItem, allViewModel: AllViewModel) {
                     Row {
                         Text(text = "DateOfOrder: ", color = Color.White, fontSize = 14.sp)
                         Text(
-                            text = item.date_of_craete_order,
+                            text = item.date_of_order_creation,
                             color = Color.White,
                             fontSize = 14.sp
                         )

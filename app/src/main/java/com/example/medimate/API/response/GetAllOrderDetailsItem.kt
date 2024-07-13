@@ -2,17 +2,17 @@ package com.example.medimate.API.response
 
 data class GetAllOrderDetailsItem(
     val category: String,
-    val date_of_craete_order: String,
+    val certified: Int,
+    val date_of_order_creation: String,
     val id: Int,
-    val isApproved: String,
-    val phone: String,
+    val isApproved: Int,
+    val message: String,
+    val order_id: String,
+    val price: Double,
     val product_id: String,
     val product_name: String,
-    val product_price: Double,
     val quantity: Int,
-    val status: Int,
     val total_amount: Double,
-    val user_address: String,
     val user_id: String,
     val user_name: String
 )

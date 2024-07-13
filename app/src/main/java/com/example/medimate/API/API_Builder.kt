@@ -21,8 +21,9 @@ interface API_Builder {
         @Field("name") name: String,
         @Field("password") password: String,
         @Field("email") email: String,
+        @Field("phone_info") phone_info: String,
         @Field("address") address: String,
-        @Field("phone") phone: String,
+        @Field("phone_number") phone_number: String,
         @Field("pinCode") pinCode: String
     ): Response<UserCreateResponse?>
 
@@ -30,7 +31,7 @@ interface API_Builder {
     @FormUrlEncoded
     @POST("/getSpacificUser")
     suspend fun getSpecificUser(
-        @Field("User_id") user_id: String
+        @Field("user_id") user_id: String
     ): Response<GetSpecificUser>
 
     @GET("/getAllProduct")
@@ -41,27 +42,17 @@ interface API_Builder {
     suspend fun addOrder(
         @Field("product_id") product_id: String,
         @Field("user_id") user_id: String,
-        @Field("user_name") user_name: String,
-        @Field("user_address") user_address: String,
-        @Field("phone") phone: String,
         @Field("product_name") product_name: String,
-        @Field("category") category: String,
+        @Field("user_name") user_name: String,
         @Field("total_amount") total_amount: String,
         @Field("quantity") quantity: String,
-        @Field("status") status: Int,
-        @Field("product_price") product_price: String
+        @Field("message") message: String,
+        @Field("price") price: String,
+        @Field("certified") certified: String,
+        @Field("category") category: String,
     ): Response<AddOrder>
 
-    @FormUrlEncoded
-    @POST("/avaiableProducts")
-    suspend fun availableProducts(
-        @Field("user_id") user_id: String,
-        @Field("product_id") product_id: String,
-        @Field("price") price: String,
-        @Field("product_name") product_name: String,
-        @Field("category") category: String,
-        @Field("stock") stock: String
-    ): Response<AddToAvailableProducts>
+
 
     @GET("/getAvailableProducts")
     suspend fun getAvailableProducts(): Response<GetAllAvailableProducts>

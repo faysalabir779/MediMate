@@ -6,5 +6,5 @@ data class AllProductItem(
     val id: Int,
     val name: String,
     val price: Double,
-    val stack: Int
+    val stock: Int
 )

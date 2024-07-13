@@ -1,15 +1,17 @@
 package com.example.medimate.API.response
 
 data class GetSpecificUserItem(
-    val Address: String,
-    val Date_of_account_creation: String,
-    val Email: String,
-    val Id: Int,
-    val Level: Int,
-    val Name: String,
-    val Password: String,
-    val Phone: String,
-    val PinCode: String,
-    val User_id: String,
-    val isApproved: String
+    val address: String,
+    val block: Int,
+    val date_of_account_creation: String,
+    val email: String,
+    val id: Int,
+    val isApproved: Int,
+    val level: Int,
+    val name: String,
+    val password: String,
+    val phone_info: String,
+    val phone_number: String,
+    val pinCode: String,
+    val user_id: String
 )
