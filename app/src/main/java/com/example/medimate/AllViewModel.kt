@@ -13,9 +13,9 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.medimate.API.response.AllProductItem
-import com.example.medimate.API.response.GetAllAvailableProductsItem
 import com.example.medimate.API.response.GetAllOrderDetailsItem
+import com.example.medimate.API.response.GetAllProductItem
+import com.example.medimate.API.response.GetAvailableProductsByUserIdItem
 import com.example.medimate.API.response.GetSpecificUserItem
 import com.example.medimate.pref.PreferenceKeys
 import com.example.medimate.pref.UserData
@@ -26,17 +26,17 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore("User_Id")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore("user_id")
 
 class AllViewModel(context: Context) : ViewModel() {
 
     var state = mutableStateOf("")
 
-    var data = mutableStateOf<List<AllProductItem>>(emptyList())
+    var data = mutableStateOf<List<GetAllProductItem>>(emptyList())
     var specificUser = mutableStateOf<List<GetSpecificUserItem>>(emptyList())
     var allOrder = mutableStateOf<List<GetAllOrderDetailsItem>>(emptyList())
 
-    var availableProducts = mutableStateOf<List<GetAllAvailableProductsItem>>(emptyList())
+    var availableProducts = mutableStateOf<List<GetAvailableProductsByUserIdItem>>(emptyList())
 
     private val dataStore = context.dataStore
 
@@ -69,7 +69,6 @@ class AllViewModel(context: Context) : ViewModel() {
                 Log.d("idkoi", "joafj: ${it.userId}")
                 getSpecificUser(it.userId)
             }
-
         }
     }
 
@@ -106,7 +105,15 @@ class AllViewModel(context: Context) : ViewModel() {
         state.value = State.LOADING.name
         viewModelScope.launch {
             var result =
-                RetrofitInstance.api.createUser(name, password, email, "123", address, phone, pinCode)
+                RetrofitInstance.api.createUser(
+                    name,
+                    password,
+                    email,
+                    "123",
+                    address,
+                    phone,
+                    pinCode
+                )
 
             if (result.isSuccessful) {
                 if (result.body()?.status == 200) {
@@ -144,6 +151,53 @@ class AllViewModel(context: Context) : ViewModel() {
         }
     }
 
+    fun getAvailableProductsByUserId(userId: String) {
+        viewModelScope.launch {
+            Log.d("addd", "getAvailableProductsByUserId: $userId")
+            val result = RetrofitInstance.api.getAvailableProductsByUserId(userId)
+            if (result.isSuccessful) {
+                val dataBody = result.body()!!
+                availableProducts.value = dataBody ?: emptyList()
+            }
+        }
+    }
+
+    fun sell(
+        productId: String,
+        productquantity: String,
+        remainingStock: String,
+        totalAmount: Double,
+        productPrice: Double,
+        productName: String,
+        name: String,
+        userId: String,
+        applicationContext: Context
+    ) {
+        viewModelScope.launch {
+            val result = RetrofitInstance.api.Sell(
+                productId,
+                productquantity,
+                remainingStock,
+                totalAmount.toString(),
+                productPrice.toString(),
+                productName,
+                name,
+                userId
+            )
+            if (result.isSuccessful) {
+                Toast.makeText(applicationContext, "Sell Complete", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun updateAvailableProducts(productId: String, remainingStock: Int) {
+        viewModelScope.launch {
+            val result = RetrofitInstance.api.updateAvailableProducts(productId, remainingStock)
+            if (result.isSuccessful) {
+
+            }
+        }
+    }
 
     suspend fun getALlProduct() {
         viewModelScope.launch {
@@ -233,3 +287,4 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
     }
 
 }
+

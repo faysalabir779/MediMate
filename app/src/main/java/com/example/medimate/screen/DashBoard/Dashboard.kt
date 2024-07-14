@@ -61,7 +61,8 @@ fun Dashboard(
 ) {
     val savedData by allViewModel.preferenceData.collectAsState()
 
-    var availableProducts = allViewModel.availableProducts.value.filter { it.user_id == savedData.userId }
+    var availableProducts = allViewModel.availableProducts.value
+    Log.d("ffff", "Dashboard: $availableProducts")
 
 
     var dropDown by remember {
@@ -77,6 +78,10 @@ fun Dashboard(
     var productCategory by remember { mutableStateOf("") }
     var certified by remember { mutableStateOf(0) }
     var stock by remember { mutableStateOf(0) }
+
+    LaunchedEffect(key1 = true) {
+        allViewModel.getAvailableProductsByUserId(savedData.userId)
+    }
 
     Column(
         modifier = Modifier
@@ -254,6 +259,7 @@ fun Dashboard(
                         })
                 }
 
+
             }
         }
 
@@ -262,13 +268,15 @@ fun Dashboard(
 
         OutlinedTextField(
             value = productquantity,
-            onValueChange = { productquantity = it
-                quantityExceeds = productquantity.toIntOrNull() ?: 0 >= stock
+            onValueChange = {
+                productquantity = it
+                quantityExceeds = (productquantity.toIntOrNull() ?: 0) >= stock
                 totalAmount = if (productquantity.isNotEmpty() && !quantityExceeds) {
                     productPrice * productquantity.toDouble()
                 } else {
                     0.0
-                }},
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth(),
             placeholder = {
@@ -323,6 +331,7 @@ fun Dashboard(
             )
         }
 
+
         Spacer(modifier = Modifier.height(20.dp))
         Button(
             onClick = {
@@ -340,19 +349,19 @@ fun Dashboard(
                     Toast.makeText(applicationContext, "Quantity Exceeds", Toast.LENGTH_SHORT)
                         .show()
                 } else {
-//                    allViewModel.addOrder(
-//                        applicationContext,
-//                        productId,
-//                        savedData.name,
-//                        savedData.userId,
-//                        savedData.address,
-//                        savedData.phone,
-//                        productName,
-//                        category,
-//                        totalAmount.toString(),
-//                        productquantity,
-//                        status
-//                    )
+                    var remainingStock = stock.toInt() - productquantity.toInt()
+                    allViewModel.updateAvailableProducts(productId, remainingStock)
+                    allViewModel.sell(
+                        productId,
+                        productquantity,
+                        remainingStock.toString(),
+                        totalAmount,
+                        productPrice,
+                        productName,
+                        savedData.name,
+                        savedData.userId,
+                        applicationContext
+                    )
                     productName = ""
                     productPrice = 0.0
                     productquantity = ""

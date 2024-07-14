@@ -195,7 +195,7 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
                         onClick = {
                             productName = it!!.name
                             productPrice = it.price
-                            productId = it.id.toString()
+                            productId = it.products_id
                             productCategory = it.category
                             stock = it.stock
                             certified = it.certified

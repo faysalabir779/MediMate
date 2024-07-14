@@ -2,15 +2,19 @@ package com.example.medimate.API
 
 import com.example.medimate.API.response.AddOrder
 import com.example.medimate.API.response.AddToAvailableProducts
-import com.example.medimate.API.response.AllProduct
-import com.example.medimate.API.response.GetAllAvailableProducts
 import com.example.medimate.API.response.GetAllOrderDetails
+import com.example.medimate.API.response.GetAllProduct
+import com.example.medimate.API.response.GetAvailableProductsByUserId
 import com.example.medimate.API.response.GetSpecificUser
+import com.example.medimate.API.response.Sell
+import com.example.medimate.API.response.UpdateAvailableProduct
+import com.example.medimate.API.response.UpdateProductStock
 import com.example.medimate.API.response.UserCreateResponse
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 
 interface API_Builder {
@@ -35,7 +39,7 @@ interface API_Builder {
     ): Response<GetSpecificUser>
 
     @GET("/getAllProduct")
-    suspend fun getAllProduct(): Response<AllProduct>
+    suspend fun getAllProduct(): Response<GetAllProduct>
 
     @FormUrlEncoded
     @POST("/addOrderDetails")
@@ -52,10 +56,33 @@ interface API_Builder {
         @Field("category") category: String,
     ): Response<AddOrder>
 
+    @FormUrlEncoded
+    @PATCH("/updateAvailableProducts")
+    suspend fun updateAvailableProducts(
+        @Field("product_id") product_id: String,
+        @Field("stock") stock: Int,
+    ):Response<UpdateAvailableProduct>
+
+    @FormUrlEncoded
+    @POST("/getAvailableProductsByUserId")
+    suspend fun getAvailableProductsByUserId(
+        @Field("user_id") user_id: String
+    ): Response<GetAvailableProductsByUserId>
+
+    @FormUrlEncoded
+    @POST("/craeteSellHistory")
+    suspend fun Sell(
+        @Field("product_id") product_id: String,
+        @Field("quantity") quantity: String,
+        @Field("remaining_stock") remaining_stock: String,
+        @Field("total_amount") total_amount: String,
+        @Field("price") price: String,
+        @Field("product_name") product_name: String,
+        @Field("user_name") user_name: String,
+        @Field("user_id") user_id: String,
+    ): Response<Sell>
 
 
-    @GET("/getAvailableProducts")
-    suspend fun getAvailableProducts(): Response<GetAllAvailableProducts>
 
     @GET("/getAllOrdersDetail")
     suspend fun getAllOrderDetails(): Response<GetAllOrderDetails>

@@ -1,6 +1,7 @@
 package com.example.medimate.screen.order
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,6 +47,7 @@ fun PendingOrder(allViewModel: AllViewModel, applicationContext: Context) {
     var hasPendingOrder by remember { mutableStateOf(false) }
 
     val allOrder = allViewModel.allOrder.value
+    Log.d("ggggg", "PendingOrder: ${savedData.userId}")
 
     LaunchedEffect(key1 = true) {
         allViewModel.getAllOrderDetails()

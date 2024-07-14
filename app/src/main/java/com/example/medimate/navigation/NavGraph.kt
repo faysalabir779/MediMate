@@ -30,6 +30,7 @@ fun NavGraph(
 
     val savedData by allViewModel.preferenceData.collectAsState()
 
+    Log.d("ggggg", "NavGraph: ${savedData.userId}")
 
     var startDestination = if (savedData.userId == "") {
         Routes.SignUp
