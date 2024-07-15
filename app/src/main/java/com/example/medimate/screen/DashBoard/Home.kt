@@ -128,7 +128,7 @@ fun Home(
                     }
 
                     BottomNavRoutes.Sell.name -> {
-                        Sell()
+                        Sell(allViewModel)
                     }
 
                     BottomNavRoutes.Inventory.name -> {

@@ -16,6 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.medimate.API.response.GetAllOrderDetailsItem
 import com.example.medimate.API.response.GetAllProductItem
 import com.example.medimate.API.response.GetAvailableProductsByUserIdItem
+import com.example.medimate.API.response.GetSellHistoryByUserIdItem
 import com.example.medimate.API.response.GetSpecificUserItem
 import com.example.medimate.pref.PreferenceKeys
 import com.example.medimate.pref.UserData
@@ -35,7 +36,7 @@ class AllViewModel(context: Context) : ViewModel() {
     var data = mutableStateOf<List<GetAllProductItem>>(emptyList())
     var specificUser = mutableStateOf<List<GetSpecificUserItem>>(emptyList())
     var allOrder = mutableStateOf<List<GetAllOrderDetailsItem>>(emptyList())
-
+    var sellHistory = mutableStateOf<List<GetSellHistoryByUserIdItem>>(emptyList())
     var availableProducts = mutableStateOf<List<GetAvailableProductsByUserIdItem>>(emptyList())
 
     private val dataStore = context.dataStore
@@ -65,31 +66,34 @@ class AllViewModel(context: Context) : ViewModel() {
     init {
         state.value = State.DEFAULT.name
         viewModelScope.launch {
-            preferenceData.collect {
-                Log.d("idkoi", "joafj: ${it.userId}")
-                getSpecificUser(it.userId)
+            preferenceData.collect {userData->
+                userData.userId?.let {
+                    getSpecificUser(it)
+                }?: run {
+
+                }
             }
         }
     }
 
     fun savePref(
-        userId: String,
-        name: String,
-        password: String,
-        email: String,
-        address: String,
-        phone: String,
-        pinCode: String
+        userId: String? = null,
+        name: String? = null,
+        password: String? = null,
+        email: String? = null,
+        address: String? = null,
+        phone: String? = null,
+        pinCode: String? = null
     ) {
         viewModelScope.launch {
-            dataStore.edit {
-                it[PreferenceKeys.USER_ID] = userId
-                it[PreferenceKeys.USER_NAME] = name
-                it[PreferenceKeys.USER_PASSWORD] = password
-                it[PreferenceKeys.USER_EMAIL] = email
-                it[PreferenceKeys.USER_ADDRESS] = address
-                it[PreferenceKeys.USER_PHONE] = phone
-                it[PreferenceKeys.USER_PINCODE] = pinCode
+            dataStore.edit { preferences ->
+                userId?.let { preferences[PreferenceKeys.USER_ID] = it }
+                name?.let { preferences[PreferenceKeys.USER_NAME] = it }
+                password?.let { preferences[PreferenceKeys.USER_PASSWORD] = it }
+                email?.let { preferences[PreferenceKeys.USER_EMAIL] = it }
+                address?.let { preferences[PreferenceKeys.USER_ADDRESS] = it }
+                phone?.let { preferences[PreferenceKeys.USER_PHONE] = it }
+                pinCode?.let { preferences[PreferenceKeys.USER_PINCODE] = it }
             }
         }
     }
@@ -134,6 +138,27 @@ class AllViewModel(context: Context) : ViewModel() {
                 state.value = State.FAILED.name
             }
 
+        }
+    }
+
+    fun login(email: String, password: String) {
+        viewModelScope.launch {
+            state.value = State.LOADING.name
+            val result = RetrofitInstance.api.login(email, password)
+            if (result.isSuccessful) {
+                if (result.body()?.status == 200) {
+                    val userId = result.body()?.message
+                    userId?.let {
+                        savePref(userId = it)
+                        state.value = State.SUCCESS.name
+                    }
+                }
+                else {
+                    state.value = State.FAILED.name
+                }
+            } else{
+                state.value = State.FAILED.name
+            }
         }
     }
 
@@ -190,9 +215,20 @@ class AllViewModel(context: Context) : ViewModel() {
         }
     }
 
+    fun getSellHistory(userId: String) {
+        viewModelScope.launch {
+            val result = RetrofitInstance.api.sellHistory(userId)
+            if (result.isSuccessful) {
+                val dataBody = result.body()!!
+                sellHistory.value = dataBody ?: emptyList()
+            }
+        }
+    }
+
     fun updateAvailableProducts(productId: String, remainingStock: Int) {
         viewModelScope.launch {
-            val result = RetrofitInstance.api.updateAvailableProducts(productId, remainingStock)
+            val result =
+                RetrofitInstance.api.updateAvailableProducts(productId, remainingStock)
             if (result.isSuccessful) {
 
             }
@@ -239,7 +275,11 @@ class AllViewModel(context: Context) : ViewModel() {
             )
             if (result.isSuccessful) {
                 if (result.body()?.status == 200) {
-                    Toast.makeText(applicationContext, "Order Successfully", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        applicationContext,
+                        "Order Successfully",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 } else {
                     Toast.makeText(applicationContext, "Order Failed", Toast.LENGTH_SHORT)

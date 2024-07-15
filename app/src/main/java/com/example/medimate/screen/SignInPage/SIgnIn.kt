@@ -1,5 +1,7 @@
 package com.example.medimate.screen.SignInPage
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -50,6 +52,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.medimate.AllViewModel
 import com.example.medimate.R
+import com.example.medimate.State
 import com.example.medimate.navigation.Routes
 
 @Preview(showBackground = true)
@@ -57,6 +60,7 @@ import com.example.medimate.navigation.Routes
 fun SignInScreen(
     navController: NavController = rememberNavController(),
     allViewModel: AllViewModel,
+    applicationContext: Context,
 ) {
 
     //no ripple effect
@@ -222,7 +226,31 @@ fun SignInScreen(
                 color = Color(0xFF313ccb)
             )
             Button(
-                onClick = { /*TODO*/ }, modifier = Modifier
+                onClick = {
+                    if (email.isBlank() || password.isBlank()) {
+                        Toast.makeText(
+                            applicationContext,
+                            "Fill All the Details",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        allViewModel.login(email, password)
+                        when (allViewModel.state.value) {
+                            State.SUCCESS.name -> {
+                                navController.navigate(Routes.Home)
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Sign In Successfully",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            State.FAILED.name->{
+                                Toast.makeText(applicationContext, "Wrong", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
+                    }
+                }, modifier = Modifier
                     .width(150.dp)
                     .height(55.dp)
                     .padding(end = 38.dp),
@@ -239,6 +267,7 @@ fun SignInScreen(
         }
 
     }
+
 }
 
 

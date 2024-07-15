@@ -80,7 +80,7 @@ fun Dashboard(
     var stock by remember { mutableStateOf(0) }
 
     LaunchedEffect(key1 = true) {
-        allViewModel.getAvailableProductsByUserId(savedData.userId)
+        allViewModel.getAvailableProductsByUserId(savedData.userId!!)
     }
 
     Column(
@@ -358,8 +358,8 @@ fun Dashboard(
                         totalAmount,
                         productPrice,
                         productName,
-                        savedData.name,
-                        savedData.userId,
+                        savedData.name!!,
+                        savedData.userId!!,
                         applicationContext
                     )
                     productName = ""

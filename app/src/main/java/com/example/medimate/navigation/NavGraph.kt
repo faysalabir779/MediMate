@@ -30,10 +30,10 @@ fun NavGraph(
 
     val savedData by allViewModel.preferenceData.collectAsState()
 
-    Log.d("ggggg", "NavGraph: ${savedData.userId}")
+    Log.d("NavGraph", "Initial savedData.userId: ${savedData.userId}")
 
-    var startDestination = if (savedData.userId == "") {
-        Routes.SignUp
+    var startDestination = if (savedData.userId.isNullOrEmpty()) {
+        Routes.SignIn
     } else {
         Routes.SignUpComplete
     }
@@ -42,7 +42,7 @@ fun NavGraph(
             SignUpScreen(navController, allViewModel)
         }
         composable(Routes.SignIn) {
-            SignInScreen(navController, allViewModel)
+            SignInScreen(navController, allViewModel, applicationContext)
         }
         composable(Routes.SignUpComplete) {
             if (specificUser.isNotEmpty()) {

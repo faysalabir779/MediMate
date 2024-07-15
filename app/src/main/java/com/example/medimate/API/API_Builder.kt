@@ -5,7 +5,9 @@ import com.example.medimate.API.response.AddToAvailableProducts
 import com.example.medimate.API.response.GetAllOrderDetails
 import com.example.medimate.API.response.GetAllProduct
 import com.example.medimate.API.response.GetAvailableProductsByUserId
+import com.example.medimate.API.response.GetSellHistoryByUserId
 import com.example.medimate.API.response.GetSpecificUser
+import com.example.medimate.API.response.Login
 import com.example.medimate.API.response.Sell
 import com.example.medimate.API.response.UpdateAvailableProduct
 import com.example.medimate.API.response.UpdateProductStock
@@ -30,6 +32,13 @@ interface API_Builder {
         @Field("phone_number") phone_number: String,
         @Field("pinCode") pinCode: String
     ): Response<UserCreateResponse?>
+
+    @FormUrlEncoded
+    @POST("/login")
+    suspend fun login(
+        @Field("email") email: String,
+        @Field("password") password: String
+    ):Response<Login>
 
 
     @FormUrlEncoded
@@ -81,6 +90,12 @@ interface API_Builder {
         @Field("user_name") user_name: String,
         @Field("user_id") user_id: String,
     ): Response<Sell>
+
+    @FormUrlEncoded
+    @POST("/getSellHistoryByUserId")
+    suspend fun sellHistory(
+        @Field("user_id") userId : String
+    ): Response<GetSellHistoryByUserId>
 
 
 
