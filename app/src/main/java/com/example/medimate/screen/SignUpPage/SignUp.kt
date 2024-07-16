@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +19,12 @@ import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.rounded.Create
@@ -30,6 +37,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -45,6 +54,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -90,80 +100,73 @@ fun SignUpScreen(
             ) {
 
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopStart) {
-                    Image(
-                        painter = painterResource(id = R.drawable.bg),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .scale(1.2f)
-                    )
+
                     Column(
                         horizontalAlignment = Alignment.Start,
-                        modifier = Modifier.padding(top = 93.dp, start = 38.dp)
+                        modifier = Modifier.padding(horizontal = 38.dp)
                     ) {
-                        Text(text = "Welcome To", fontSize = 18.sp, color = Color(0xFF6671ff))
+                        Spacer(modifier = Modifier.height(70.dp))
+                        Text(text = "Welcome To", fontSize = 18.sp, color = Color(0xFF111111))
                         Text(
                             text = "MediMate",
                             fontSize = 33.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color = Color(0xFF010754)
                         )
-                        Spacer(modifier = Modifier.height(70.dp))
+                        Text(
+                            modifier = Modifier,
+                            text = stringResource(id = R.string.sign_in_text),
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Light,
+                            color = Color(0xFF111111)
+                        )
+                        Spacer(modifier = Modifier.fillMaxHeight(0.03f))
                         Text(
                             text = "Sign Up Here",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Medium,
-                            color = Color(0xFF6671ff)
+                            color = Color(0xFF111111)
                         )
+
                     }
                 }
 
 
                 Spacer(modifier = Modifier.height(14.dp))
 
-                TextField(
+                OutlinedTextField(
                     value = name, onValueChange = { name = it },
                     placeholder = {
-                        Text(text = "Full Name", fontSize = 15.sp, color = Color(0xFF313ccb))
+                        Text(text = "Full Name", fontSize = 15.sp, color = Color(0xFF111111))
                     },
                     leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Rounded.Person,
-                            contentDescription = null,
-                            tint = Color(0xFF313ccb)
-                        )
+                        Icon(Icons.Filled.Person, contentDescription = null)
                     },
-                    textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF313ccb)),
+                    maxLines = 1,
+                    textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF111111)),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 38.dp)
-                        .height(50.dp),
+                        .padding(horizontal = 38.dp),
 
                     shape = RoundedCornerShape(15.dp),
 
-                    colors = TextFieldDefaults.colors(
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedContainerColor = Color(0xFFe6e8ff),
-                        focusedContainerColor = Color(0xFFE7E7E7)
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF111111)
                     ),
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
 
-                TextField(
+                OutlinedTextField(
                     value = password, onValueChange = { password = it },
                     placeholder = {
-                        Text(text = "Password", fontSize = 15.sp, color = Color(0xFF313ccb))
+                        Text(text = "Password", fontSize = 15.sp, color = Color(0xFF111111))
                     },
                     leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Rounded.Lock,
-                            contentDescription = null,
-                            tint = Color(0xFF313ccb)
-                        )
+                        Icon(Icons.Filled.Lock, contentDescription = null)
                     },
+                    maxLines = 1,
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     trailingIcon = {
@@ -176,146 +179,110 @@ fun SignUpScreen(
                             Icon(imageVector = image, contentDescription = null)
                         }
                     },
-                    textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF313ccb)),
+                    textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF111111)),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 38.dp)
-                        .height(50.dp),
+                        .padding(horizontal = 38.dp),
 
                     shape = RoundedCornerShape(15.dp),
 
-                    colors = TextFieldDefaults.colors(
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedContainerColor = Color(0xFFe6e8ff),
-                        focusedContainerColor = Color(0xFFE7E7E7)
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF111111)
                     ),
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                TextField(
+                OutlinedTextField(
                     value = phone, onValueChange = { phone = it },
                     placeholder = {
-                        Text(text = "Enter Your Phone", fontSize = 15.sp, color = Color(0xFF313ccb))
+                        Text(text = "Phone Number", fontSize = 15.sp, color = Color(0xFF111111))
                     },
                     leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Rounded.Phone,
-                            contentDescription = null,
-                            tint = Color(0xFF313ccb)
-                        )
+                        Icon(Icons.Filled.Phone, contentDescription = null)
                     },
-                    textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF313ccb)),
+                    maxLines = 1,
+                    textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF111111)),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 38.dp)
-                        .height(50.dp),
+                        .padding(horizontal = 38.dp),
+
                     shape = RoundedCornerShape(15.dp),
 
-                    colors = TextFieldDefaults.colors(
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedContainerColor = Color(0xFFe6e8ff),
-                        focusedContainerColor = Color(0xFFE7E7E7)
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF111111)
                     ),
                 )
 
                 Spacer(modifier = Modifier.height(15.dp))
 
-                TextField(
+                OutlinedTextField(
                     value = email, onValueChange = { email = it },
                     placeholder = {
-                        Text(text = "Enter Your Email", fontSize = 15.sp, color = Color(0xFF313ccb))
+                        Text(text = "Email", fontSize = 15.sp, color = Color(0xFF111111))
                     },
                     leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Rounded.Email,
-                            contentDescription = null,
-                            tint = Color(0xFF313ccb)
-                        )
+                        Icon(Icons.Filled.Email, contentDescription = null)
                     },
-                    textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF313ccb)),
+                    maxLines = 1,
+                    textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF111111)),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 38.dp)
-                        .height(50.dp),
+                        .padding(horizontal = 38.dp),
+
                     shape = RoundedCornerShape(15.dp),
 
-                    colors = TextFieldDefaults.colors(
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedContainerColor = Color(0xFFe6e8ff),
-                        focusedContainerColor = Color(0xFFE7E7E7)
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF111111)
                     ),
                 )
 
                 Spacer(modifier = Modifier.height(15.dp))
 
-                TextField(
+                OutlinedTextField(
                     value = pin, onValueChange = { pin = it },
                     placeholder = {
-                        Text(
-                            text = "Enter Your Pin Code",
-                            fontSize = 15.sp,
-                            color = Color(0xFF313ccb)
-                        )
+                        Text(text = "Postal Code", fontSize = 15.sp, color = Color(0xFF111111))
                     },
-                    textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF313ccb)),
                     leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Rounded.Create,
-                            contentDescription = null,
-                            tint = Color(0xFF313ccb)
-                        )
+                        Icon(Icons.Filled.Code, contentDescription = null)
                     },
+                    maxLines = 1,
+                    textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF111111)),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 38.dp)
-                        .height(50.dp),
+                        .padding(horizontal = 38.dp),
+
                     shape = RoundedCornerShape(15.dp),
 
-                    colors = TextFieldDefaults.colors(
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedContainerColor = Color(0xFFe6e8ff),
-                        focusedContainerColor = Color(0xFFE7E7E7)
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF111111)
                     ),
                 )
 
                 Spacer(modifier = Modifier.height(15.dp))
 
-                TextField(
+                OutlinedTextField(
                     value = address, onValueChange = { address = it },
                     placeholder = {
-                        Text(
-                            text = "Enter Your Address",
-                            fontSize = 15.sp,
-                            color = Color(0xFF313ccb)
-                        )
+                        Text(text = "Address", fontSize = 15.sp, color = Color(0xFF111111))
                     },
                     leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Rounded.LocationOn,
-                            contentDescription = null,
-                            tint = Color(0xFF313ccb)
-                        )
+                        Icon(Icons.Filled.LocationOn, contentDescription = null)
                     },
-                    textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF313ccb)),
+                    maxLines = 1,
+                    textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF111111)),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 38.dp)
-                        .height(50.dp),
+                        .padding(horizontal = 38.dp),
+
                     shape = RoundedCornerShape(15.dp),
 
-                    colors = TextFieldDefaults.colors(
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedContainerColor = Color(0xFFe6e8ff),
-                        focusedContainerColor = Color(0xFFE7E7E7)
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF111111)
                     ),
                 )
-                Spacer(modifier = Modifier.height(28.dp))
+                Spacer(modifier = Modifier.fillMaxHeight(0.12f))
 
 
                 Button(
@@ -330,7 +297,7 @@ fun SignUpScreen(
                         .width(150.dp)
                         .height(55.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6671ff),
+                        Color(0xFF111111),
                         contentColor = Color.White
                     )
                 ) {
@@ -339,7 +306,7 @@ fun SignUpScreen(
                         fontSize = 18.sp
                     )
                 }
-                Spacer(modifier = Modifier.height(50.dp))
+                Spacer(modifier = Modifier.fillMaxHeight(0.3f))
 
                 Row {
                     Text(text = "Already have an account?", fontSize = 15.sp)
@@ -354,7 +321,7 @@ fun SignUpScreen(
                         text = "Login",
                         fontWeight = FontWeight.Bold,
                         fontSize = 15.sp,
-                        color = Color(0xFF313ccb)
+                        color = Color(0xFF111111)
                     )
                 }
 

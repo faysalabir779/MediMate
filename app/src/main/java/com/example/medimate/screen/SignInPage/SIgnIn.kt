@@ -14,21 +14,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material.icons.rounded.Email
-import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -102,7 +104,7 @@ fun SignInScreen(
             modifier = Modifier.padding(start = 38.dp),
             text = "Welcome To",
             fontSize = 18.sp,
-            color = Color(0xFF6671ff)
+            color = Color(0xFF111111)
         )
         Text(
             modifier = Modifier.padding(start = 38.dp),
@@ -112,12 +114,13 @@ fun SignInScreen(
             color = Color(0xFF010754)
         )
 
+        Spacer(modifier = Modifier.height(10.dp))
         Text(
             modifier = Modifier.padding(start = 38.dp, end = 38.dp),
-            text = "Streamline your healthcare operations with our innovative app, ensuring accurate inventory tracking, efficient supply chain management, and enhanced patient care.",
+            text = stringResource(id = R.string.sign_in_text),
             fontSize = 15.sp,
             fontWeight = FontWeight.Light,
-            color = Color(0xFF6671ff)
+            color = Color(0xFF111111)
         )
 
         Spacer(modifier = Modifier.height(40.dp))
@@ -126,51 +129,42 @@ fun SignInScreen(
             text = "Login Here",
             fontSize = 20.sp,
             fontWeight = FontWeight.Black,
-            color = Color(0xFF6671ff)
+            color = Color(0xFF111111)
         )
         Spacer(modifier = Modifier.height(18.dp))
 
-        TextField(
+        OutlinedTextField(
             value = email, onValueChange = { email = it },
             placeholder = {
-                Text(text = "Enter Your Email", fontSize = 15.sp, color = Color(0xFF313ccb))
+                Text(text = "Your Email", fontSize = 15.sp, color = Color(0xFF111111))
             },
             leadingIcon = {
-                Icon(
-                    imageVector = Icons.Rounded.Email,
-                    contentDescription = null,
-                    tint = Color(0xFF313ccb)
-                )
+                Icon(Icons.Filled.Email, contentDescription = null)
             },
-            textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF313ccb)),
+            maxLines = 1,
+            textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF111111)),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 38.dp)
-                .height(50.dp),
+                .padding(horizontal = 38.dp),
+
             shape = RoundedCornerShape(15.dp),
 
-            colors = TextFieldDefaults.colors(
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedContainerColor = Color(0xFFe6e8ff),
-                focusedContainerColor = Color(0xFFE7E7E7)
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color(0xFF111111)
             ),
         )
 
         Spacer(modifier = Modifier.height(15.dp))
 
-        TextField(
+        OutlinedTextField(
             value = password, onValueChange = { password = it },
             placeholder = {
-                Text(text = "Password", fontSize = 15.sp, color = Color(0xFF313ccb))
+                Text(text = "Password", fontSize = 15.sp, color = Color(0xFF111111))
             },
             leadingIcon = {
-                Icon(
-                    imageVector = Icons.Rounded.Lock,
-                    contentDescription = null,
-                    tint = Color(0xFF313ccb)
-                )
+                Icon(Icons.Filled.Lock, contentDescription = null)
             },
+            maxLines = 1,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             trailingIcon = {
@@ -183,19 +177,15 @@ fun SignInScreen(
                     Icon(imageVector = image, contentDescription = null)
                 }
             },
-            textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF313ccb)),
+            textStyle = TextStyle(fontSize = 15.sp, color = Color(0xFF111111)),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 38.dp)
-                .height(50.dp),
+                .padding(horizontal = 38.dp),
 
             shape = RoundedCornerShape(15.dp),
 
-            colors = TextFieldDefaults.colors(
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedContainerColor = Color(0xFFe6e8ff),
-                focusedContainerColor = Color(0xFFE7E7E7)
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color(0xFF111111)
             ),
         )
 
@@ -223,7 +213,7 @@ fun SignInScreen(
                 text = "Sign Up",
                 fontWeight = FontWeight.Bold,
                 fontSize = 15.sp,
-                color = Color(0xFF313ccb)
+                color = Color(0xFF111111)
             )
             Button(
                 onClick = {
@@ -244,7 +234,8 @@ fun SignInScreen(
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
-                            State.FAILED.name->{
+
+                            State.FAILED.name -> {
                                 Toast.makeText(applicationContext, "Wrong", Toast.LENGTH_SHORT)
                                     .show()
                             }
@@ -255,7 +246,7 @@ fun SignInScreen(
                     .height(55.dp)
                     .padding(end = 38.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF6671ff),
+                    containerColor = Color(0xFF111111),
                     contentColor = Color.White
                 )
             ) {

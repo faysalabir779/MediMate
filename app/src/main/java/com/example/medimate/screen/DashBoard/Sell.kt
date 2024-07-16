@@ -34,11 +34,8 @@ import com.example.medimate.AllViewModel
 fun Sell(allViewModel: AllViewModel) {
 
     val savedData by allViewModel.preferenceData.collectAsState()
-    var sellHistory = allViewModel.sellHistory.value.filter { it.user_id == savedData.userId }
+    val sellHistory = allViewModel.sellHistory.value.filter { it.user_id == savedData.userId }
 
-    LaunchedEffect(key1 = true) {
-        allViewModel.getSellHistory(savedData.userId!!)
-    }
 
     Column(
         modifier = Modifier
@@ -88,7 +85,7 @@ fun SellHistory(item: GetSellHistoryByUserIdItem) {
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Price: ${item.price}",
+                        text = "Price: ৳ ${item.price}",
                         color = Color.White,
                         fontSize = 14.sp
                     )
@@ -113,12 +110,12 @@ fun SellHistory(item: GetSellHistoryByUserIdItem) {
                     horizontalAlignment = Alignment.End
                 ) {
                     Text(
-                        text = "Total Price: ${item.total_amount}",
+                        text = "Total Price: ৳ ${item.total_amount}",
                         color = Color.White,
                         fontSize = 14.sp
                     )
                     Row {
-                        Text(text = "DateOfOrder: ", color = Color.White, fontSize = 14.sp)
+                        Text(text = "Date: ", color = Color.White, fontSize = 14.sp)
                         Text(
                             text = item.date_of_sell,
                             color = Color.White,

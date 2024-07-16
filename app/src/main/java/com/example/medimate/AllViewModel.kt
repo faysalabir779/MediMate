@@ -1,7 +1,6 @@
 package com.example.medimate
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
@@ -15,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.medimate.API.response.GetAllOrderDetailsItem
 import com.example.medimate.API.response.GetAllProductItem
+import com.example.medimate.API.response.GetAllUserItem
 import com.example.medimate.API.response.GetAvailableProductsByUserIdItem
 import com.example.medimate.API.response.GetSellHistoryByUserIdItem
 import com.example.medimate.API.response.GetSpecificUserItem
@@ -34,6 +34,7 @@ class AllViewModel(context: Context) : ViewModel() {
     var state = mutableStateOf("")
 
     var data = mutableStateOf<List<GetAllProductItem>>(emptyList())
+    var allUser = mutableStateOf<List<GetAllUserItem>>(emptyList())
     var specificUser = mutableStateOf<List<GetSpecificUserItem>>(emptyList())
     var allOrder = mutableStateOf<List<GetAllOrderDetailsItem>>(emptyList())
     var sellHistory = mutableStateOf<List<GetSellHistoryByUserIdItem>>(emptyList())
@@ -69,14 +70,21 @@ class AllViewModel(context: Context) : ViewModel() {
             preferenceData.collect {userData->
                 userData.userId?.let {
                     getSpecificUser(it)
+                    getAvailableProductsByUserId(it)
+                    getSellHistory(it)
+                    getAllOrderDetails()
+                    getALlProduct()
+                    getAllUser()
                 }?: run {
 
                 }
             }
+
         }
+
     }
 
-    fun savePref(
+    private fun savePref(
         userId: String? = null,
         name: String? = null,
         password: String? = null,
@@ -108,7 +116,7 @@ class AllViewModel(context: Context) : ViewModel() {
     ) {
         state.value = State.LOADING.name
         viewModelScope.launch {
-            var result =
+            val result =
                 RetrofitInstance.api.createUser(
                     name,
                     password,
@@ -162,34 +170,42 @@ class AllViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun getSpecificUser(userId: String) {
+    fun getAllUser(){
+        viewModelScope.launch {
+            val result = RetrofitInstance.api.getAllUser()
+            if (result.isSuccessful){
+                val dataBody = result.body()!!
+                allUser.value = dataBody
+            }
+        }
+    }
+
+    private fun getSpecificUser(userId: String) {
         viewModelScope.launch {
             val resultForSpecificUser =
                 RetrofitInstance.api.getSpecificUser(userId)
 
             if (resultForSpecificUser.isSuccessful) {
                 val dataBody = resultForSpecificUser.body()!!
-                Log.d("dekhbeda", "dekh: $dataBody")
-                specificUser.value = dataBody ?: emptyList()
+                specificUser.value = dataBody
 
             }
         }
     }
 
-    fun getAvailableProductsByUserId(userId: String) {
+    private fun getAvailableProductsByUserId(userId: String) {
         viewModelScope.launch {
-            Log.d("addd", "getAvailableProductsByUserId: $userId")
             val result = RetrofitInstance.api.getAvailableProductsByUserId(userId)
             if (result.isSuccessful) {
                 val dataBody = result.body()!!
-                availableProducts.value = dataBody ?: emptyList()
+                availableProducts.value = dataBody
             }
         }
     }
 
     fun sell(
         productId: String,
-        productquantity: String,
+        productQuantity: String,
         remainingStock: String,
         totalAmount: Double,
         productPrice: Double,
@@ -201,7 +217,7 @@ class AllViewModel(context: Context) : ViewModel() {
         viewModelScope.launch {
             val result = RetrofitInstance.api.Sell(
                 productId,
-                productquantity,
+                productQuantity,
                 remainingStock,
                 totalAmount.toString(),
                 productPrice.toString(),
@@ -215,12 +231,12 @@ class AllViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun getSellHistory(userId: String) {
+    private fun getSellHistory(userId: String) {
         viewModelScope.launch {
             val result = RetrofitInstance.api.sellHistory(userId)
             if (result.isSuccessful) {
                 val dataBody = result.body()!!
-                sellHistory.value = dataBody ?: emptyList()
+                sellHistory.value = dataBody
             }
         }
     }
@@ -235,12 +251,12 @@ class AllViewModel(context: Context) : ViewModel() {
         }
     }
 
-    suspend fun getALlProduct() {
+    private fun getALlProduct() {
         viewModelScope.launch {
             val result = RetrofitInstance.api.getAllProduct()
             if (result.isSuccessful) {
                 val dataBody = result.body()!!
-                data.value = dataBody ?: emptyList()
+                data.value = dataBody
             }
         }
     }
@@ -250,24 +266,21 @@ class AllViewModel(context: Context) : ViewModel() {
         productId: String,
         name: String,
         userId: String,
-        address: String,
-        phone: String,
         productName: String,
         category: String,
         totalAmount: String,
-        productquantity: String,
-        status: Int,
+        productQuantity: String,
         price: String,
         certified: String
     ) {
         viewModelScope.launch {
-            var result = RetrofitInstance.api.addOrder(
+            val result = RetrofitInstance.api.addOrder(
                 productId,
                 userId,
                 productName,
                 name,
                 totalAmount,
-                productquantity,
+                productQuantity,
                 "It's Urgent",
                 price,
                 certified,
@@ -299,7 +312,7 @@ class AllViewModel(context: Context) : ViewModel() {
             val result = RetrofitInstance.api.getAllOrderDetails()
             if (result.isSuccessful) {
                 val dataBody = result.body()!!
-                allOrder.value = dataBody ?: emptyList()
+                allOrder.value = dataBody
             }
         }
     }
@@ -308,10 +321,10 @@ class AllViewModel(context: Context) : ViewModel() {
 }
 
 sealed class State(var name: String) {
-    object DEFAULT : State("DEFAULT")
-    object SUCCESS : State("SUCCESS")
-    object LOADING : State("LOADING")
-    object FAILED : State("FAILED")
+    data object DEFAULT : State("DEFAULT")
+    data object SUCCESS : State("SUCCESS")
+    data object LOADING : State("LOADING")
+    data object FAILED : State("FAILED")
 }
 
 class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory {

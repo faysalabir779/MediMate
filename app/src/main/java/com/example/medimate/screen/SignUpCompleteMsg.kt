@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ProgressIndicatorDefaults
@@ -44,18 +45,19 @@ fun SignUpCompleteMsg(note: String = "") {
             text = "Complete",
             fontSize = 45.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF6671ff)
+            color = Color(0xFF111111)
         )
 
         Spacer(modifier = Modifier.height(5.dp))
         if (note == stringResource(id = R.string.waiting_approval) || note == stringResource(id = R.string.blocked_success_text)) {
             Text(
                 text = note, fontWeight = FontWeight.Light,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 38.dp)
             )
         } else {
-            Spacer(modifier = Modifier.height(10.dp))
-            CircularProgressIndicator( )
+            Spacer(modifier = Modifier.height(15.dp))
+            CircularProgressIndicator( color = Color(0xFF111111))
         }
 
     }

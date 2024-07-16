@@ -26,13 +26,15 @@ fun NavGraph(
 ) {
 
     val specificUser = allViewModel.specificUser.value
-
+    val allUser = allViewModel.allUser.value
 
     val savedData by allViewModel.preferenceData.collectAsState()
 
     Log.d("NavGraph", "Initial savedData.userId: ${savedData.userId}")
 
-    var startDestination = if (savedData.userId.isNullOrEmpty()) {
+    val isUserExist = allUser.any{it.user_id == savedData.userId}
+
+    var startDestination = if (savedData.userId.isNullOrEmpty() || !isUserExist) {
         Routes.SignIn
     } else {
         Routes.SignUpComplete

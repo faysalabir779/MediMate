@@ -62,7 +62,14 @@ fun Dashboard(
     val savedData by allViewModel.preferenceData.collectAsState()
 
     var availableProducts = allViewModel.availableProducts.value
-    Log.d("ffff", "Dashboard: $availableProducts")
+    var sellHistory = allViewModel.sellHistory.value
+    var pending = allViewModel.allOrder.value.filter { it.user_id == savedData.userId && it.isApproved == 2 }
+    var declined = allViewModel.allOrder.value.filter { it.user_id == savedData.userId && it.isApproved == 0 }
+
+    var declinedOrder = declined.size
+    var pendingOrder = pending.size
+    var totalStock =  availableProducts.sumOf { it.stock }
+    var totalSell = sellHistory.sumOf { it.quantity }
 
 
     var dropDown by remember {
@@ -79,9 +86,11 @@ fun Dashboard(
     var certified by remember { mutableStateOf(0) }
     var stock by remember { mutableStateOf(0) }
 
-    LaunchedEffect(key1 = true) {
-        allViewModel.getAvailableProductsByUserId(savedData.userId!!)
-    }
+//    LaunchedEffect(key1 = true) {
+//        allViewModel.getAvailableProductsByUserId(savedData.userId!!)
+//        allViewModel.getSellHistory(savedData.userId!!)
+//        allViewModel.getAllOrderDetails()
+//    }
 
     Column(
         modifier = Modifier
@@ -103,14 +112,98 @@ fun Dashboard(
                         color = Color(0xFF111111), shape = RoundedCornerShape(10.dp)
                     )
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.graph),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(160.dp)
-                        .fillMaxSize()
-                        .align(Alignment.Center)
-                )
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Products Available: ",
+                            color = Color.White,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 14.sp
+                        )
+                        Text(
+                            text = availableProducts.size.toString(),
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Total Stock: ",
+                            color = Color.White,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 14.sp
+                        )
+                        Text(
+                            text = totalStock.toString(),
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Total Sell: ",
+                            color = Color.White,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 14.sp
+                        )
+                        Text(
+                            text = totalSell.toString(),
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Pending Order: ",
+                            color = Color.White,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 14.sp
+                        )
+                        Text(
+                            text = pendingOrder.toString(),
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Declined Order: ",
+                            color = Color.White,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 14.sp
+                        )
+                        Text(
+                            text = declinedOrder.toString(),
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp
+                        )
+                    }
+
+                }
+
 
             }
             Spacer(modifier = Modifier.width(10.dp))
@@ -168,7 +261,7 @@ fun Dashboard(
                         Text(
                             text = "Category: $productCategory",
                             color = Color.White,
-                            fontSize = 14.sp
+                            fontSize = 12.sp
                         )
                         Text(
                             text = "Available Stock: $stock",
@@ -190,7 +283,7 @@ fun Dashboard(
                             .fillMaxWidth(),
                         horizontalAlignment = Alignment.End
                     ) {
-                        Text(text = "Price: $productPrice", color = Color.White, fontSize = 14.sp)
+                        Text(text = "Price: ৳ $productPrice", color = Color.White, fontSize = 14.sp)
                         Row {
                             Text(text = "Certified: ", color = Color.White, fontSize = 14.sp)
                             Text(

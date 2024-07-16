@@ -30,7 +30,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,11 +54,7 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
 
     val savedData by allViewModel.preferenceData.collectAsState()
 
-    var data = allViewModel.data.value
-
-    LaunchedEffect(key1 = true) {
-        allViewModel.getALlProduct()
-    }
+    val data = allViewModel.data.value
 
     var dropDown by remember {
         mutableStateOf(false)
@@ -67,7 +62,7 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
 
     var productName by remember { mutableStateOf("") }
     var productPrice by remember { mutableStateOf(0.0) }
-    var productquantity by remember { mutableStateOf("") }
+    var productQuantity by remember { mutableStateOf("") }
     var totalAmount by remember { mutableStateOf(0.0) }
     var productId by remember { mutableStateOf("") }
     var productCategory by remember { mutableStateOf("") }
@@ -112,7 +107,7 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
                         Text(
                             text = "Category: $productCategory",
                             color = Color.White,
-                            fontSize = 14.sp
+                            fontSize = 12.sp
                         )
                         Text(
                             text = "Available Stock: $stock",
@@ -134,7 +129,7 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
                             .fillMaxWidth(),
                         horizontalAlignment = Alignment.End
                     ) {
-                        Text(text = "Price: $productPrice", color = Color.White, fontSize = 14.sp)
+                        Text(text = "Price: ৳ $productPrice", color = Color.White, fontSize = 14.sp)
                         Row {
                             Text(text = "Certified: ", color = Color.White, fontSize = 14.sp)
                             Text(
@@ -211,12 +206,12 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
 
 
         OutlinedTextField(
-            value = productquantity,
+            value = productQuantity,
             onValueChange = {
-                productquantity = it
-                quantityExceeds = productquantity.toIntOrNull() ?: 0 >= stock
-                totalAmount = if (productquantity.isNotEmpty() && !quantityExceeds) {
-                    productPrice * productquantity.toDouble()
+                productQuantity = it
+                quantityExceeds = (productQuantity.toIntOrNull() ?: 0) >= stock
+                totalAmount = if (productQuantity.isNotEmpty() && !quantityExceeds) {
+                    productPrice * productQuantity.toDouble()
                 } else {
                     0.0
                 }
@@ -278,7 +273,7 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
                         "Please Select a Product",
                         Toast.LENGTH_SHORT
                     ).show()
-                } else if (productquantity.isEmpty()) {
+                } else if (productQuantity.isEmpty()) {
                     Toast.makeText(applicationContext, "Quantity is empty", Toast.LENGTH_SHORT)
                         .show()
                 } else if (quantityExceeds) {
@@ -291,19 +286,16 @@ fun NewOrder(allViewModel: AllViewModel, applicationContext: Context) {
                         productId,
                         savedData.name!!,
                         savedData.userId!!,
-                        savedData.address!!,
-                        savedData.phone!!,
                         productName,
                         category,
                         totalAmount.toString(),
-                        productquantity,
-                        status,
+                        productQuantity,
                         productPrice.toString(),
                         certified.toString()
                     )
                     productName = ""
                     productPrice = 0.0
-                    productquantity = ""
+                    productQuantity = ""
                     totalAmount = 0.0
                     stock = 0
                     productId = ""

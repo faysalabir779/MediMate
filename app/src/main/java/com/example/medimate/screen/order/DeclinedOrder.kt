@@ -46,9 +46,6 @@ fun DeclinedOrder(allViewModel: AllViewModel, applicationContext: Context) {
 
     val allOrder = allViewModel.allOrder.value
 
-    LaunchedEffect(key1 = true) {
-        allViewModel.getAllOrderDetails()
-    }
     Column {
         LazyColumn {
             itemsIndexed(allOrder.reversed()) { index, item ->
@@ -107,7 +104,7 @@ fun DeclinedOrder(item: GetAllOrderDetailsItem, allViewModel: AllViewModel) {
                     Text(
                         text = "Category: ${item.category}",
                         color = Color.White,
-                        fontSize = 14.sp
+                        fontSize = 12.sp
                     )
                     Text(
                         text = "Quantity: ${item.quantity}",
@@ -130,12 +127,12 @@ fun DeclinedOrder(item: GetAllOrderDetailsItem, allViewModel: AllViewModel) {
                     horizontalAlignment = Alignment.End
                 ) {
                     Text(
-                        text = "Total Price: ${item.total_amount}",
+                        text = "Total Price: ৳ ${item.total_amount}",
                         color = Color.White,
                         fontSize = 14.sp
                     )
                     Row {
-                        Text(text = "DateOfOrder: ", color = Color.White, fontSize = 14.sp)
+                        Text(text = "Date: ", color = Color.White, fontSize = 14.sp)
                         Text(
                             text = item.date_of_order_creation,
                             color = Color.White,

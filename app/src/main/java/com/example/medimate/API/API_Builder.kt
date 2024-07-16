@@ -4,6 +4,7 @@ import com.example.medimate.API.response.AddOrder
 import com.example.medimate.API.response.AddToAvailableProducts
 import com.example.medimate.API.response.GetAllOrderDetails
 import com.example.medimate.API.response.GetAllProduct
+import com.example.medimate.API.response.GetAllUser
 import com.example.medimate.API.response.GetAvailableProductsByUserId
 import com.example.medimate.API.response.GetSellHistoryByUserId
 import com.example.medimate.API.response.GetSpecificUser
@@ -39,6 +40,9 @@ interface API_Builder {
         @Field("email") email: String,
         @Field("password") password: String
     ):Response<Login>
+
+    @GET("/getAllUsers")
+    suspend fun getAllUser() : Response<GetAllUser>
 
 
     @FormUrlEncoded

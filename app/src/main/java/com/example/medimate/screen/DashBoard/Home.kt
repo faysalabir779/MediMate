@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -74,12 +77,10 @@ fun Home(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(20.dp))
-                    .navigationBarsPadding(bottom = false)
             ) {
                 NavigationBar(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth().navigationBarsPadding().height(50.dp)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -103,7 +104,7 @@ fun Home(
                                 icon = {
                                     Icon(
                                         painter = painterResource(id = item.icon),
-                                        modifier = Modifier.size(31.dp),
+                                        modifier = Modifier.size(30.dp),
                                         contentDescription = item.title
                                     )
                                 },
@@ -114,13 +115,10 @@ fun Home(
             }
         }
     ) {
-        Column {
+        Column (modifier = Modifier.padding(it)){
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
+                modifier = Modifier.fillMaxSize()
                     .background(color = Color.White)
-                    .padding(it)
             ) {
                 when (bottomTabs) {
                     BottomNavRoutes.Dashboard.name -> {

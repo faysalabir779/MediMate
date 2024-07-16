@@ -52,13 +52,14 @@ fun PendingOrder(allViewModel: AllViewModel, applicationContext: Context) {
     LaunchedEffect(key1 = true) {
         allViewModel.getAllOrderDetails()
     }
+
     Column {
         LazyColumn {
             itemsIndexed(allOrder.reversed()) { index, item ->
                 if (item.user_id == savedData.userId) {
                     if (item.isApproved == 2) {
                         hasPendingOrder = true
-                        MyOrder(item, allViewModel)
+                        MyOrder(item)
                         Spacer(modifier = Modifier.height(10.dp))
                     }
                 }
@@ -79,7 +80,7 @@ fun PendingOrder(allViewModel: AllViewModel, applicationContext: Context) {
 }
 
 @Composable
-fun MyOrder(item: GetAllOrderDetailsItem, allViewModel: AllViewModel) {
+fun MyOrder(item: GetAllOrderDetailsItem) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -110,7 +111,7 @@ fun MyOrder(item: GetAllOrderDetailsItem, allViewModel: AllViewModel) {
                     Text(
                         text = "Category: ${item.category}",
                         color = Color.White,
-                        fontSize = 14.sp
+                        fontSize = 12.sp
                     )
                     Text(
                         text = "Quantity: ${item.quantity}",
@@ -133,12 +134,12 @@ fun MyOrder(item: GetAllOrderDetailsItem, allViewModel: AllViewModel) {
                     horizontalAlignment = Alignment.End
                 ) {
                     Text(
-                        text = "Total Price: ${item.total_amount}",
+                        text = "Total Price: ৳ ${item.total_amount}",
                         color = Color.White,
                         fontSize = 14.sp
                     )
                     Row {
-                        Text(text = "DateOfOrder: ", color = Color.White, fontSize = 14.sp)
+                        Text(text = "Date: ", color = Color.White, fontSize = 14.sp)
                         Text(
                             text = item.date_of_order_creation,
                             color = Color.White,
