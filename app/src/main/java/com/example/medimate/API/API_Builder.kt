@@ -12,11 +12,13 @@ import com.example.medimate.API.response.Login
 import com.example.medimate.API.response.Sell
 import com.example.medimate.API.response.UpdateAvailableProduct
 import com.example.medimate.API.response.UpdateProductStock
+import com.example.medimate.API.response.UpdateUserRes
 import com.example.medimate.API.response.UserCreateResponse
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 
@@ -43,6 +45,17 @@ interface API_Builder {
 
     @GET("/getAllUsers")
     suspend fun getAllUser() : Response<GetAllUser>
+
+    @FormUrlEncoded
+    @HTTP(method = "PATCH", path = "updateUserAllDetails", hasBody = true)
+    suspend fun updateUserAllDetails(
+        @Field("user_id") userId: String,
+        @Field("name") name: String? = null,
+        @Field("password") password: String? = null,
+        @Field("address") address: String? = null,
+        @Field("email") email: String? = null,
+        @Field("phone_number") phoneNumber: String? = null
+    ) : Response<UpdateUserRes>
 
 
     @FormUrlEncoded

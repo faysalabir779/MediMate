@@ -170,6 +170,25 @@ class AllViewModel(context: Context) : ViewModel() {
         }
     }
 
+    fun updateUser(
+        userId: String,
+        name: String? = null,
+        password: String? = null,
+        email: String? = null,
+        phone: String? = null,
+        address: String? = null,
+        applicationContext: Context
+    ){
+        viewModelScope.launch {
+            val result = RetrofitInstance.api.updateUserAllDetails(userId, name, password, address, email, phone)
+            if (result.isSuccessful){
+                if (result.body()?.status == 200){
+                    Toast.makeText(applicationContext, "User Update Complete", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     fun getAllUser(){
         viewModelScope.launch {
             val result = RetrofitInstance.api.getAllUser()
@@ -180,7 +199,7 @@ class AllViewModel(context: Context) : ViewModel() {
         }
     }
 
-    private fun getSpecificUser(userId: String) {
+    fun getSpecificUser(userId: String) {
         viewModelScope.launch {
             val resultForSpecificUser =
                 RetrofitInstance.api.getSpecificUser(userId)
@@ -193,7 +212,7 @@ class AllViewModel(context: Context) : ViewModel() {
         }
     }
 
-    private fun getAvailableProductsByUserId(userId: String) {
+    fun getAvailableProductsByUserId(userId: String) {
         viewModelScope.launch {
             val result = RetrofitInstance.api.getAvailableProductsByUserId(userId)
             if (result.isSuccessful) {
@@ -231,7 +250,7 @@ class AllViewModel(context: Context) : ViewModel() {
         }
     }
 
-    private fun getSellHistory(userId: String) {
+    fun getSellHistory(userId: String) {
         viewModelScope.launch {
             val result = RetrofitInstance.api.sellHistory(userId)
             if (result.isSuccessful) {
@@ -251,7 +270,7 @@ class AllViewModel(context: Context) : ViewModel() {
         }
     }
 
-    private fun getALlProduct() {
+    fun getALlProduct() {
         viewModelScope.launch {
             val result = RetrofitInstance.api.getAllProduct()
             if (result.isSuccessful) {

@@ -59,7 +59,11 @@ fun Dashboard(
     allViewModel: AllViewModel,
     applicationContext: Context
 ) {
+
+
     val savedData by allViewModel.preferenceData.collectAsState()
+
+
 
     var availableProducts = allViewModel.availableProducts.value
     var sellHistory = allViewModel.sellHistory.value
@@ -86,11 +90,11 @@ fun Dashboard(
     var certified by remember { mutableStateOf(0) }
     var stock by remember { mutableStateOf(0) }
 
-//    LaunchedEffect(key1 = true) {
-//        allViewModel.getAvailableProductsByUserId(savedData.userId!!)
-//        allViewModel.getSellHistory(savedData.userId!!)
-//        allViewModel.getAllOrderDetails()
-//    }
+    LaunchedEffect(key1 = true) {
+        allViewModel.getAvailableProductsByUserId(savedData.userId!!)
+        allViewModel.getSellHistory(savedData.userId!!)
+        allViewModel.getAllOrderDetails()
+    }
 
     Column(
         modifier = Modifier
@@ -117,7 +121,9 @@ fun Dashboard(
                     verticalArrangement = Arrangement.Center,
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
@@ -134,7 +140,9 @@ fun Dashboard(
                         )
                     }
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
@@ -151,7 +159,9 @@ fun Dashboard(
                         )
                     }
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
@@ -168,7 +178,9 @@ fun Dashboard(
                         )
                     }
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
@@ -185,7 +197,9 @@ fun Dashboard(
                         )
                     }
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
