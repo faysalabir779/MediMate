@@ -478,6 +478,9 @@ fun Dashboard(
                     productCategory = ""
                     certified = 0
                     Log.d("alldata", "NewOrder: ${savedData.pinCode}")
+                    allViewModel.getAvailableProductsByUserId(savedData.userId!!)
+                    allViewModel.getSellHistory(savedData.userId!!)
+                    allViewModel.getAllOrderDetails()
                 }
 
             },

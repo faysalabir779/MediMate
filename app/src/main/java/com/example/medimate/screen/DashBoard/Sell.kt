@@ -36,6 +36,9 @@ fun Sell(allViewModel: AllViewModel) {
     val savedData by allViewModel.preferenceData.collectAsState()
     val sellHistory = allViewModel.sellHistory.value.filter { it.user_id == savedData.userId }
 
+    LaunchedEffect(key1 = true) {
+        allViewModel.getSellHistory(savedData.userId!!)
+    }
 
     Column(
         modifier = Modifier
